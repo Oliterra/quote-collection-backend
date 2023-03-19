@@ -3,6 +3,9 @@ package edu.quote.collection.dbaccess.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -18,6 +21,8 @@ public class QuoteEntity extends PersistableEntity {
     @Column(name = "number_of_votes")
     private Integer numberOfVotes;
     private Double rating;
+    @Column(name = "creation_date")
+    private Timestamp creationTime;
     private BookEntity book;
     private UserEntity user;
     private List<GroupEntity> groups;
