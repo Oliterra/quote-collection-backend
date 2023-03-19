@@ -11,6 +11,8 @@ import java.util.stream.Collectors;
 @Component
 public class TagConverter extends BaseConverter {
 
+    private static final String HASH_SYMBOL = "#";
+
     public List<TagVO> convertToVOList(List<TagEntity> tagEntityList) {
         List<TagVO> voList = new ArrayList<>();
         if (tagEntityList != null) {
@@ -22,6 +24,9 @@ public class TagConverter extends BaseConverter {
     }
 
     public TagVO convertToVO(TagEntity tagEntity) {
-        return super.convert(tagEntity, TagVO.class);
+        TagVO tagVO = new TagVO();
+        tagVO.setId(tagEntity.getId());
+        tagVO.setName(HASH_SYMBOL + tagEntity.getName());
+        return tagVO;
     }
 }

@@ -1,9 +1,6 @@
 package edu.quote.collection.converter;
 
-import edu.quote.collection.dbaccess.entity.BookEntity;
-import edu.quote.collection.dbaccess.entity.QuoteEntity;
-import edu.quote.collection.dbaccess.entity.TagEntity;
-import edu.quote.collection.dbaccess.entity.UserEntity;
+import edu.quote.collection.dbaccess.entity.*;
 import edu.quote.collection.remote.vo.QuoteMainInfoVO;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -33,15 +30,21 @@ public class QuoteConverter extends BaseConverter {
             UserEntity user = quoteEntity.getUser();
             if (user != null) {
                 mainInfoVO.setUserId(user.getId());
+                mainInfoVO.setUsername(user.getUsername());
             }
             BookEntity book = quoteEntity.getBook();
             if (book != null) {
                 mainInfoVO.setBookName(book.getName());
-                mainInfoVO.setAuthorName(book.getAuthor().getName());
+                mainInfoVO.setAuthorName(book.getAuthor().getName() + " " + book.getAuthor().getSurname());
             }
-            List<TagEntity> tagEntityList = quoteEntity.getTags();
-            if (tagEntityList != null) {
-                mainInfoVO.setTags(tagConverter.convertToVOList(tagEntityList));
+            List<GroupEntity> groups = quoteEntity.getGroups();
+            if (groups != null) {
+                List<String> groupNames = groups.stream().map(GroupEntity::getName).toList();
+                mainInfoVO.setGroupNames(groupNames);
+            }
+            List<TagEntity> tags = quoteEntity.getTags();
+            if (tags != null) {
+                mainInfoVO.setTags(tagConverter.convertToVOList(tags));
             }
         }
         return mainInfoVO;
