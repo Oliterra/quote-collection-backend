@@ -10,7 +10,7 @@ public interface QuoteRepository extends JpaRepository<QuoteEntity, Long> {
 
     Long countByUser(UserEntity userEntity);
 
-    Page<QuoteEntity> findAllByOrderByCreationTimeAsc(Pageable pageable);
+    Page<QuoteEntity> findAllByOrderByCreationTimeDesc(Pageable pageable);
 
-    Page<QuoteEntity> findAllByUserOrderByCreationTimeAsc(UserEntity userEntity, Pageable pageable);
+    Page<QuoteEntity> findAllByUserOrderByCreationTimeDesc(UserEntity userEntity, Pageable pageable);
 }

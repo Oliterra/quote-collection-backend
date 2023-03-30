@@ -13,11 +13,12 @@ public class QuoteMainInfoVO {
     private Long userId;
     private String username;
     private String authorName;
+    private Long bookId;
     private String bookName;
     private String text;
     private Double rating;
     private Boolean isPublic;
     private Boolean canBeAddedToGroup;
-    private List<String> groupNames;
+    private List<GroupVO> groups;
     private List<TagVO> tags;
 }

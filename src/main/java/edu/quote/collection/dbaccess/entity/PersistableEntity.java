@@ -10,9 +10,8 @@ public class PersistableEntity {
     private Long id;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQUENCE")
-    @SequenceGenerator(name = "SEQUENCE", allocationSize = 10, sequenceName = "idSeq")
-    @Column(name = "id", unique = true, nullable = false, precision = 19)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id_sequence")
+    @SequenceGenerator(name = "id_sequence", sequenceName = "id_sequence", allocationSize = 1)
     public Long getId() {
         return id;
     }

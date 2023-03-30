@@ -40,4 +40,9 @@ public class QuoteController {
         Pageable paging = PageRequest.of(pageNumber, pageSize);
         return quoteService.getUserQuotesMainInfoPage(userId, paging);
     }
+
+    @PostMapping("/create")
+    public void createQuote(@RequestBody QuoteMainInfoVO quoteMainInfoVO) {
+        quoteService.createQuote(quoteMainInfoVO);
+    }
 }

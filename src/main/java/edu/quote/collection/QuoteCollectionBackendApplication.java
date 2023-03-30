@@ -6,8 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class QuoteCollectionBackendApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(QuoteCollectionBackendApplication.class, args);
-	}
-
+    public static void main(String[] args) {
+        SpringApplication.run(QuoteCollectionBackendApplication.class, args);
+    }
 }
