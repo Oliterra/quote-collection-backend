@@ -12,14 +12,16 @@ import java.util.stream.Collectors;
 @Component
 @AllArgsConstructor
 public class QuoteConverter extends BaseConverter {
+
+    private final GroupConverter groupConverter;
     private final TagConverter tagConverter;
 
-    public List<QuoteMainInfoVO> convertToMainInfoVOList(List<QuoteEntity> quotes) {
+    public List<QuoteMainInfoVO> convertToMainInfoVOList(List<QuoteEntity> quoteEntities) {
         List<QuoteMainInfoVO> mainInfoVOList = new ArrayList<>();
-        if (quotes != null) {
-            mainInfoVOList = quotes.stream()
-                .map(this::convertToMainInfoVO)
-                .collect(Collectors.toList());
+        if (quoteEntities != null) {
+            mainInfoVOList = quoteEntities.stream()
+                    .map(this::convertToMainInfoVO)
+                    .collect(Collectors.toList());
         }
         return mainInfoVOList;
     }
@@ -34,13 +36,13 @@ public class QuoteConverter extends BaseConverter {
             }
             BookEntity book = quoteEntity.getBook();
             if (book != null) {
+                mainInfoVO.setBookId(book.getId());
                 mainInfoVO.setBookName(book.getName());
                 mainInfoVO.setAuthorName(book.getAuthor().getName() + " " + book.getAuthor().getSurname());
             }
             List<GroupEntity> groups = quoteEntity.getGroups();
             if (groups != null) {
-                List<String> groupNames = groups.stream().map(GroupEntity::getName).toList();
-                mainInfoVO.setGroupNames(groupNames);
+                mainInfoVO.setGroups(groupConverter.convertToVOList(groups));
             }
             List<TagEntity> tags = quoteEntity.getTags();
             if (tags != null) {

@@ -6,6 +6,7 @@ import lombok.Data;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Data
@@ -16,13 +17,11 @@ public class QuoteEntity extends PersistableEntity {
     private String text;
     @Column(name = "is_public")
     private Boolean isPublic;
-    @Column(name = "can_be_added_to_group")
-    private Boolean canBeAddedToGroup;
     @Column(name = "number_of_votes")
     private Integer numberOfVotes;
     private Double rating;
     @Column(name = "creation_date")
-    private Timestamp creationTime;
+    private OffsetDateTime creationTime;
     private BookEntity book;
     private UserEntity user;
     private List<GroupEntity> groups;
@@ -39,8 +38,11 @@ public class QuoteEntity extends PersistableEntity {
     public UserEntity getUser() {
         return user;
     }
-
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "quotes")
+    
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "group_to_quote",
+        joinColumns = @JoinColumn(name = "quote_id"),
+        inverseJoinColumns = @JoinColumn(name = "group_id"))
     public List<GroupEntity> getGroups() {
         return groups;
     }

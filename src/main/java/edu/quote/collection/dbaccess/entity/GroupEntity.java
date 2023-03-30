@@ -22,10 +22,7 @@ public class GroupEntity extends PersistableEntity {
         return user;
     }
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "group_to_quote",
-        joinColumns = @JoinColumn(name = "group_id"),
-        inverseJoinColumns = @JoinColumn(name = "quote_id"))
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "groups")
     public List<QuoteEntity> getQuotes() {
         return quotes;
     }
