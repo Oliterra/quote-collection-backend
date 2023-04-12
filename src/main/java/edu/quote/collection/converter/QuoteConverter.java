@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class QuoteConverter extends BaseConverter {
 
+    private final BookConverter bookConverter;
     private final GroupConverter groupConverter;
     private final TagConverter tagConverter;
 
@@ -36,9 +37,7 @@ public class QuoteConverter extends BaseConverter {
             }
             BookEntity book = quoteEntity.getBook();
             if (book != null) {
-                mainInfoVO.setBookId(book.getId());
-                mainInfoVO.setBookName(book.getName());
-                mainInfoVO.setAuthorName(book.getAuthor().getName() + " " + book.getAuthor().getSurname());
+                mainInfoVO.setBook(bookConverter.convertToVO(book));
             }
             List<GroupEntity> groups = quoteEntity.getGroups();
             if (groups != null) {

@@ -18,10 +18,10 @@ public class GroupService {
     private final GroupConverter groupConverter;
 
     public List<GroupVO> getAllGroups() {
-        return groupConverter.convertToVOList(groupRepository.findAll());
+        return groupConverter.convertToVOList(groupRepository.findAllByOrderByNameAsc());
     }
 
     public List<GroupVO> getUserGroups(Long userId) {
-        return groupConverter.convertToVOList(groupRepository.findAllByUserId(userId));
+        return groupConverter.convertToVOList(groupRepository.findAllByUserIdOrderByNameAsc(userId));
     }
 }

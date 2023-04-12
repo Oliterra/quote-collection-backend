@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface GroupRepository extends JpaRepository<GroupEntity, Long> {
 
-    List<GroupEntity> findAllByUserId(Long userId);
+    List<GroupEntity> findAllByOrderByNameAsc();
+
+    List<GroupEntity> findAllByUserIdOrderByNameAsc(Long userId);
 
 }

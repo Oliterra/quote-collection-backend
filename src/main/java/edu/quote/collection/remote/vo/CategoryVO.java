@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class AuthorVO {
+public class CategoryVO {
 
     private Long id;
     private String name;
