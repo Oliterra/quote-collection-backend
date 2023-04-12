@@ -12,9 +12,7 @@ public class QuoteMainInfoVO {
     private Long id;
     private Long userId;
     private String username;
-    private String authorName;
-    private Long bookId;
-    private String bookName;
+    private BookVO book;
     private String text;
     private Double rating;
     private Boolean isPublic;
