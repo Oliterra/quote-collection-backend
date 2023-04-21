@@ -3,6 +3,7 @@ package edu.quote.collection.remote.controller;
 import edu.quote.collection.remote.vo.QuoteFilterVO;
 import edu.quote.collection.remote.vo.QuoteListVO;
 import edu.quote.collection.remote.vo.QuoteMainInfoVO;
+import edu.quote.collection.remote.vo.UserQuoteRatingVO;
 import edu.quote.collection.service.QuoteService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -34,5 +35,15 @@ public class QuoteController {
     @PostMapping("/create")
     public void createQuote(@RequestBody QuoteMainInfoVO quoteMainInfoVO) {
         quoteService.createQuote(quoteMainInfoVO);
+    }
+
+    @PatchMapping("/visibility/{id}")
+    public QuoteMainInfoVO changeQuoteVisibility(@PathVariable Long id) {
+        return quoteService.changeQuoteVisibility(id);
+    }
+    
+    @PutMapping("/rating")
+    public Double putUserRating(@RequestBody UserQuoteRatingVO userQuoteRating) {
+        return quoteService.putUserRating(userQuoteRating);
     }
 }
