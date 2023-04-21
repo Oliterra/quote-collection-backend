@@ -2,12 +2,10 @@ package edu.quote.collection.service;
 
 import edu.quote.collection.converter.QuoteConverter;
 import edu.quote.collection.converter.TagConverter;
+import edu.quote.collection.converter.UserQuoteRatingConverter;
 import edu.quote.collection.dbaccess.entity.*;
 import edu.quote.collection.dbaccess.repository.*;
-import edu.quote.collection.remote.vo.GroupVO;
-import edu.quote.collection.remote.vo.QuoteFilterVO;
-import edu.quote.collection.remote.vo.QuoteListVO;
-import edu.quote.collection.remote.vo.QuoteMainInfoVO;
+import edu.quote.collection.remote.vo.*;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -27,9 +25,11 @@ public class QuoteService {
     private final QuoteRepository quoteRepository;
     private final TagRepository tagRepository;
     private final UserRepository userRepository;
+    private final UserQuoteRatingRepository userQuoteRatingRepository;
     private final QuoteConverter quoteConverter;
     private final TagConverter tagConverter;
     private final BookService bookService;
+    private final UserQuoteRatingConverter userQuoteRatingConverter;
 
     public QuoteListVO getAllQuotesMainInfoPage(Pageable paging) {
         QuoteListVO quoteList = new QuoteListVO();
@@ -95,5 +95,26 @@ public class QuoteService {
         quote.setGroups(groups);
         quote.setTags(tags);
         quoteRepository.save(quote);
+    }
+
+    public QuoteMainInfoVO changeQuoteVisibility(Long id) {
+        QuoteEntity quote = quoteRepository.getById(id);
+        quote.setIsPublic(!quote.getIsPublic());
+        return quoteConverter.convertToMainInfoVO(quoteRepository.save(quote));
+    }
+
+    public Double putUserRating(UserQuoteRatingVO userQuoteRating) {
+        UserQuoteRatingEntity userQuoteRatingEntity = userQuoteRatingConverter.convertToEntity(userQuoteRating);
+        userQuoteRatingRepository.save(userQuoteRatingEntity);
+        QuoteEntity quoteEntity = quoteRepository.getReferenceById(userQuoteRating.getQuoteId());
+        int updatedNumberOfVotes = quoteEntity.getNumberOfVotes() + 1;
+        Double updatedRating = Double.valueOf(userQuoteRating.getRating());
+        if (quoteEntity.getNumberOfVotes() > 0) {
+            updatedRating = (quoteEntity.getRating() * quoteEntity.getNumberOfVotes() + userQuoteRating.getRating()) / updatedNumberOfVotes;
+        }
+        quoteEntity.setNumberOfVotes(updatedNumberOfVotes);
+        quoteEntity.setRating(updatedRating);
+        quoteRepository.save(quoteEntity);
+        return updatedRating;
     }
 }
