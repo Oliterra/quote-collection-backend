@@ -56,7 +56,7 @@ public class QuoteService {
         if (!bookService.bookBelongsToAuthor(quoteFilter.getBookId(), quoteFilter.getAuthorId()) || !bookService.bookBelongsToCategories(quoteFilter.getBookId(), quoteFilter.getCategoryIds())) {
             filteredQuotesList.setCount(0L);
         } else {
-            List<QuoteEntity> filteredQuoteEntities = quoteRepository.findQuotesByTextAndBookAndAuthorAndCategories(quoteFilter.getAuthorId(), quoteFilter.getBookId(), quoteFilter.getText()).stream()
+            List<QuoteEntity> filteredQuoteEntities = quoteRepository.findAllByTextAndBookAndAuthor(quoteFilter.getAuthorId(), quoteFilter.getBookId(), quoteFilter.getText()).stream()
                     .filter(quote -> {
                         List<Long> quoteCategoryIds = quote.getBook().getCategories().stream().map(PersistableEntity::getId).toList();
                         List<Long> quoteTagIds = quote.getTags().stream().map(PersistableEntity::getId).toList();

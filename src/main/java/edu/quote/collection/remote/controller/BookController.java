@@ -1,11 +1,10 @@
 package edu.quote.collection.remote.controller;
 
+import edu.quote.collection.remote.vo.BookFilterVO;
 import edu.quote.collection.remote.vo.BookVO;
 import edu.quote.collection.service.BookService;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,5 +18,20 @@ public class BookController {
     @GetMapping()
     public List<BookVO> getAllBooks() {
         return bookService.getAllBooks();
+    }
+
+    @PostMapping("/filter")
+    public List<BookVO> getFilteredBooks(@RequestBody BookFilterVO bookFilter) {
+        return bookService.getFilteredBooks(bookFilter);
+    }
+
+    @PostMapping()
+    public BookVO createBook(@RequestBody BookVO book) {
+        return bookService.createBook(book);
+    }
+
+    @PatchMapping()
+    public BookVO editBook(@RequestBody BookVO book) {
+        return bookService.editBook(book);
     }
 }

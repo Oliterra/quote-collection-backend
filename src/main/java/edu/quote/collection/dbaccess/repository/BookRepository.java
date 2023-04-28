@@ -1,5 +1,6 @@
 package edu.quote.collection.dbaccess.repository;
 
+import edu.quote.collection.dbaccess.entity.AuthorEntity;
 import edu.quote.collection.dbaccess.entity.BookEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -10,6 +11,10 @@ import java.util.List;
 public interface BookRepository extends JpaRepository<BookEntity, Long> {
 
     List<BookEntity> findAllByOrderByNameAsc();
+
+    List<BookEntity> findAllByAuthorOrderByNameAsc(AuthorEntity author);
+
+    List<BookEntity> findAllByIdAndAuthorOrderByNameAsc(Long bookId, AuthorEntity author);
 
     @Query("SELECT COUNT(b) > 0 FROM BookEntity b WHERE b.id = :bookId AND b.author.id = :authorId")
     boolean existsByIdAndAuthor(@Param("bookId") Long bookId, @Param("authorId") Long authorId);
