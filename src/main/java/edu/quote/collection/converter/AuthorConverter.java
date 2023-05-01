@@ -27,4 +27,12 @@ public class AuthorConverter extends BaseConverter {
         authorVO.setName("%s %s".formatted(authorEntity.getName(), authorEntity.getSurname()));
         return authorVO;
     }
+
+    public AuthorEntity convertToEntity(AuthorVO authorVO) {
+        AuthorEntity authorEntity = new AuthorEntity();
+        String[] authorNameAndSurname = authorVO.getName().split("\\s");
+        authorEntity.setName(authorNameAndSurname[0]);
+        authorEntity.setSurname(authorNameAndSurname[1]);
+        return authorEntity;
+    }
 }

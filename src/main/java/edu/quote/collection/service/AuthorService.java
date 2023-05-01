@@ -1,6 +1,7 @@
 package edu.quote.collection.service;
 
 import edu.quote.collection.converter.AuthorConverter;
+import edu.quote.collection.dbaccess.entity.AuthorEntity;
 import edu.quote.collection.dbaccess.repository.AuthorRepository;
 import edu.quote.collection.remote.vo.AuthorVO;
 import jakarta.transaction.Transactional;
@@ -19,5 +20,10 @@ public class AuthorService {
 
     public List<AuthorVO> getAllAuthors() {
         return authorConverter.convertToVOList(authorRepository.findAllByOrderByNameAsc());
+    }
+
+    public AuthorVO createAuthor(AuthorVO author) {
+        AuthorEntity savedAuthor = authorRepository.save(authorConverter.convertToEntity(author));
+        return authorConverter.convertToVO(savedAuthor);
     }
 }
