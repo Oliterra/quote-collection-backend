@@ -4,6 +4,7 @@ import edu.quote.collection.converter.QuoteConverter;
 import edu.quote.collection.converter.TagConverter;
 import edu.quote.collection.converter.UserQuoteRatingConverter;
 import edu.quote.collection.dbaccess.entity.*;
+import edu.quote.collection.dbaccess.entity.id.UserQuoteRatingId;
 import edu.quote.collection.dbaccess.repository.*;
 import edu.quote.collection.remote.vo.*;
 import jakarta.transaction.Transactional;
@@ -11,9 +12,12 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Transactional
 @Service
@@ -76,7 +80,7 @@ public class QuoteService {
         List<GroupEntity> groups = groupRepository.findAllById(groupIds);
         List<TagEntity> tags = new ArrayList<>();
         quoteMainInfo.getTags().forEach(tag -> {
-            TagEntity tagEntity = null;
+            TagEntity tagEntity;
             if (tag.getId() != null) {
                 tagEntity = tagRepository.findById(tag.getId()).get();
             } else {
@@ -104,16 +108,22 @@ public class QuoteService {
     }
 
     public Double putUserRating(UserQuoteRatingVO userQuoteRating) {
-        UserQuoteRatingEntity userQuoteRatingEntity = userQuoteRatingConverter.convertToEntity(userQuoteRating);
-        userQuoteRatingRepository.save(userQuoteRatingEntity);
-        QuoteEntity quoteEntity = quoteRepository.getReferenceById(userQuoteRating.getQuoteId());
-        int updatedNumberOfVotes = quoteEntity.getNumberOfVotes() + 1;
-        Double updatedRating = Double.valueOf(userQuoteRating.getRating());
-        if (quoteEntity.getNumberOfVotes() > 0) {
-            updatedRating = (quoteEntity.getRating() * quoteEntity.getNumberOfVotes() + userQuoteRating.getRating()) / updatedNumberOfVotes;
+        UserQuoteRatingId currentUserRatingId = new UserQuoteRatingId(userQuoteRating.getUserId(), userQuoteRating.getQuoteId());
+        Optional<UserQuoteRatingEntity> currentUserRating = userQuoteRatingRepository.findById(currentUserRatingId);
+        boolean isCurrentRating = currentUserRating.isPresent();
+        if (isCurrentRating) {
+            userQuoteRatingRepository.deleteById(currentUserRatingId);
         }
+        userQuoteRatingRepository.saveAndFlush(userQuoteRatingConverter.convertToEntity(userQuoteRating));
+        QuoteEntity quoteEntity = quoteRepository.getById(userQuoteRating.getQuoteId());
+        int updatedNumberOfVotes = quoteEntity.getNumberOfVotes();
+        if (!isCurrentRating) {
+            updatedNumberOfVotes++;
+        }
+        int ratingSum = userQuoteRatingRepository.findAllByQuoteId(userQuoteRating.getQuoteId()).stream().mapToInt(UserQuoteRatingEntity::getRating).sum();
+        double updatedRating = ((double) ratingSum) / ((double) updatedNumberOfVotes);
         quoteEntity.setNumberOfVotes(updatedNumberOfVotes);
-        quoteEntity.setRating(updatedRating);
+        quoteEntity.setRating(new BigDecimal(updatedRating).setScale(2, RoundingMode.HALF_UP).doubleValue());
         quoteRepository.save(quoteEntity);
         return updatedRating;
     }

@@ -17,6 +17,7 @@ import org.springframework.util.CollectionUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Transactional
@@ -32,18 +33,14 @@ public class BookService {
     private final BookConverter bookConverter;
 
     public List<BookVO> getAllBooks() {
-        return bookRepository.findAllByOrderByNameAsc().stream()
-                .map(book -> {
-                    BookVO bookVO = bookConverter.convertToVO(book);
-                    bookVO.setQuotesCount(quoteRepository.getCountByBook(book));
-                    return bookVO;
-                }).collect(Collectors.toList());
+        return convertToVOList(bookRepository.findAllByOrderByNameAsc());
     }
 
     public List<BookVO> getFilteredBooks(BookFilterVO bookFilter) {
         List<BookEntity> bookEntities = new ArrayList<>();
         Long bookId = bookFilter.getBookId();
         Long authorId = bookFilter.getAuthorId();
+        Long userId = bookFilter.getUserId();
         List<Long> categoryIds = bookFilter.getCategoryIds();
         if (bookBelongsToAuthor(bookId, authorId) || bookBelongsToCategories(bookId, categoryIds)) {
             if (bookId == null && authorId == null) {
@@ -63,8 +60,13 @@ public class BookService {
                         .filter(book -> book.getCategories().stream().map(PersistableEntity::getId).toList().containsAll(categoryIds))
                         .toList();
             }
+            if (userId != null) {
+                bookEntities = bookEntities.stream()
+                        .filter(book -> Objects.equals(book.getUser().getId(), userId))
+                        .toList();
+            }
         }
-        return bookConverter.convertToVOList(bookEntities);
+        return convertToVOList(bookEntities);
     }
 
     public boolean bookBelongsToAuthor(Long bookId, Long authorId) {
@@ -109,5 +111,14 @@ public class BookService {
             bookEntity.setCategories(categoryRepository.findAllById(updatedCategoryIds));
         }
         return bookConverter.convertToVO(bookRepository.save(bookEntity));
+    }
+
+    private List<BookVO> convertToVOList(List<BookEntity> bookEntities) {
+        return bookEntities.stream()
+                .map(book -> {
+                    BookVO bookVO = bookConverter.convertToVO(book);
+                    bookVO.setQuotesCount(quoteRepository.getCountByBook(book));
+                    return bookVO;
+                }).collect(Collectors.toList());
     }
 }

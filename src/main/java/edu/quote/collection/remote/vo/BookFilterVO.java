@@ -11,5 +11,6 @@ public class BookFilterVO {
 
     private Long bookId;
     private Long authorId;
+    private Long userId;
     private List<Long> categoryIds;
 }
