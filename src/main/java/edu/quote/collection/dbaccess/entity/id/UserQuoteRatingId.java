@@ -9,4 +9,12 @@ public class UserQuoteRatingId implements Serializable {
 
     private Long userId;
     private Long quoteId;
+
+    public UserQuoteRatingId() {
+    }
+
+    public UserQuoteRatingId(Long userId, Long quoteId) {
+        this.userId = userId;
+        this.quoteId = quoteId;
+    }
 }

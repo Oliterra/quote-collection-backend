@@ -16,15 +16,21 @@ public class UserEntity extends PersistableEntity {
     private String username;
     private String password;
     private List<RoleEntity> roles;
+    private List<BookEntity> books;
     private List<QuoteEntity> quotes;
     private List<GroupEntity> groups;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "user_to_role",
-        joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "role_id"))
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
     public List<RoleEntity> getRoles() {
         return roles;
+    }
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
+    public List<BookEntity> getBooks() {
+        return books;
     }
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)

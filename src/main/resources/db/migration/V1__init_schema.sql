@@ -9,8 +9,10 @@ CREATE TABLE "book"
 (
     "id"        BIGINT       NOT NULL PRIMARY KEY,
     "name"      VARCHAR(255) NOT NULL,
-    "author_id" BIGINT      NOT NULL
-        CONSTRAINT "FK_AUTHOR_TO_BOOK" REFERENCES "author"
+    "author_id" BIGINT       NOT NULL
+        CONSTRAINT "FK_AUTHOR_TO_BOOK" REFERENCES "author",
+    "user_id"   BIGINT       NOT NULL
+        CONSTRAINT "FK_USER_TO_BOOK" REFERENCES "user",
 );
 
 CREATE TABLE "category"
@@ -22,7 +24,7 @@ CREATE TABLE "category"
 
 CREATE TABLE "book_to_category"
 (
-    "book_id"     BIGINT  NOT NULL
+    "book_id"     BIGINT NOT NULL
         CONSTRAINT "FK_BOOK_TO_BOOK_TO_CATEGORY" REFERENCES "book",
     "category_id" BIGINT NOT NULL
         CONSTRAINT "FK_CATEGORY_TO_BOOK_TO_CATEGORY" REFERENCES "category",
@@ -75,23 +77,23 @@ CREATE TABLE "role_to_permission"
 
 CREATE TABLE "quote"
 (
-    "id"                    BIGINT        NOT NULL PRIMARY KEY,
-    "text"                  VARCHAR(2000) NOT NULL,
-    "is_public"             BOOLEAN       NOT NULL,
-    "number_of_votes"       INTEGER       NOT NULL,
-    "rating"                FLOAT         NOT NULL,
-    creation_time           TIMESTAMPTZ   NOT NULL,
-    "user_id"               BIGINT       NOT NULL
+    "id"              BIGINT        NOT NULL PRIMARY KEY,
+    "text"            VARCHAR(2000) NOT NULL,
+    "is_public"       BOOLEAN       NOT NULL,
+    "number_of_votes" INTEGER       NOT NULL,
+    "rating"          FLOAT         NOT NULL,
+    creation_time     TIMESTAMPTZ   NOT NULL,
+    "user_id"         BIGINT        NOT NULL
         CONSTRAINT "FK_USER_TO_QUOTE" REFERENCES "user",
-    "book_id"               BIGINT       NOT NULL
+    "book_id"         BIGINT        NOT NULL
         CONSTRAINT "FK_BOOK_TO_QUOTE" REFERENCES "book",
     UNIQUE ("text")
 );
 
 CREATE TABLE "user_quote_rating"
 (
-    "user_id"  BIGINT NOT NULL,
-    "quote_id" BIGINT NOT NULL,
+    "user_id"  BIGINT  NOT NULL,
+    "quote_id" BIGINT  NOT NULL,
     "rating"   INTEGER NOT NULL,
     PRIMARY KEY ("user_id", "quote_id")
 );
@@ -117,7 +119,7 @@ CREATE TABLE "group"
     "id"        BIGINT       NOT NULL PRIMARY KEY,
     "name"      VARCHAR(255) NOT NULL,
     "is_public" BOOLEAN      NOT NULL,
-    "user_id"   BIGINT      NOT NULL
+    "user_id"   BIGINT       NOT NULL
         CONSTRAINT "FK_USER_TO_GROUP" REFERENCES "user"
 );
 
