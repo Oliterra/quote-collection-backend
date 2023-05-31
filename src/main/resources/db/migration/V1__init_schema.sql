@@ -1,3 +1,15 @@
+CREATE TABLE "user"
+(
+    "id"       BIGINT       NOT NULL PRIMARY KEY,
+    "name"     VARCHAR(255) NOT NULL,
+    "surname"  VARCHAR(255) NOT NULL,
+    "email"    VARCHAR(255) NOT NULL,
+    "username" VARCHAR(255) NOT NULL,
+    "password" VARCHAR(255) NOT NULL,
+    UNIQUE ("username"),
+    UNIQUE ("email")
+);
+
 CREATE TABLE "author"
 (
     "id"      BIGINT       NOT NULL PRIMARY KEY,
@@ -12,7 +24,7 @@ CREATE TABLE "book"
     "author_id" BIGINT       NOT NULL
         CONSTRAINT "FK_AUTHOR_TO_BOOK" REFERENCES "author",
     "user_id"   BIGINT       NOT NULL
-        CONSTRAINT "FK_USER_TO_BOOK" REFERENCES "user",
+        CONSTRAINT "FK_USER_TO_BOOK" REFERENCES "user"
 );
 
 CREATE TABLE "category"
@@ -29,18 +41,6 @@ CREATE TABLE "book_to_category"
     "category_id" BIGINT NOT NULL
         CONSTRAINT "FK_CATEGORY_TO_BOOK_TO_CATEGORY" REFERENCES "category",
     PRIMARY KEY ("book_id", "category_id")
-);
-
-CREATE TABLE "user"
-(
-    "id"       BIGINT       NOT NULL PRIMARY KEY,
-    "name"     VARCHAR(255) NOT NULL,
-    "surname"  VARCHAR(255) NOT NULL,
-    "email"    VARCHAR(255) NOT NULL,
-    "username" VARCHAR(255) NOT NULL,
-    "password" VARCHAR(255) NOT NULL,
-    UNIQUE ("username"),
-    UNIQUE ("email")
 );
 
 CREATE TABLE "role"
@@ -82,7 +82,7 @@ CREATE TABLE "quote"
     "is_public"       BOOLEAN       NOT NULL,
     "number_of_votes" INTEGER       NOT NULL,
     "rating"          FLOAT         NOT NULL,
-    creation_time     TIMESTAMPTZ   NOT NULL,
+    "creation_time"   TIMESTAMPTZ   NOT NULL,
     "user_id"         BIGINT        NOT NULL
         CONSTRAINT "FK_USER_TO_QUOTE" REFERENCES "user",
     "book_id"         BIGINT        NOT NULL
