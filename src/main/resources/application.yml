@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/quotes-collection
+    url: jdbc:postgresql://quotes-collection-db:5432/quotes-collection
     username: nadezhda
     password: password
     driver-class-name: org.postgresql.Driver
@@ -9,4 +9,4 @@ spring:
     database-platform: org.hibernate.dialect.PostgresPlusDialect
     show-sql: true
 server:
-  port: 8081
+  port: 8080
