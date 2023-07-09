@@ -23,6 +23,6 @@ public interface QuoteRepository extends JpaRepository<QuoteEntity, Long> {
             "AND (:bookId IS NULL OR b.id = :bookId) AND (:text IS NULL OR q.text LIKE %:text%)")
     List<QuoteEntity> findAllByTextAndBookAndAuthor(@Param("authorId") Long authorId, @Param("bookId") Long bookId, @Param("text") String text);
 
-    @Query("SELECT COUNT(q) FROM QuoteEntity q WHERE q.book = :book")
-    Integer getCountByBook(BookEntity book);
+    @Query("SELECT COUNT(q) FROM QuoteEntity q WHERE q.book = :bookEntity")
+    Integer getCountByBook(@Param("bookEntity") BookEntity bookEntity);
 }
